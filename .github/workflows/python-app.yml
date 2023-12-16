@@ -28,4 +28,4 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirement.txt ]; then pip install -r requirement.txt; fi
     - name: Execute another python file
-      run: python Test_Validation/Contact_info_Raw2Bronze_validation.py
+      run: python main2.py
