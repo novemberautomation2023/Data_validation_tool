@@ -2,7 +2,6 @@ import datetime
 import json
 import os
 import sys
-import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from Library.General_Purpose_Functions import count_validation,duplicate , \
@@ -83,18 +82,18 @@ records_present_only_in_target(contact_info_bronze_expected,contact_info_bronze_
 Null_value_check(contact_info_bronze_actual,Key_column,Out)
 Uniquess_check(contact_info_bronze_actual,Key_column,Out)
 data_compare(contact_info_bronze_expected,contact_info_bronze_actual,'Identifier',Out)
-Summary = pd.DataFrame(Out)
+#Summary = pd.DataFrame(Out)
 
 
-Summary = spark.createDataFrame(Summary)
-Summary.show()
-Summary.write.csv("Output/Summary", mode='overwrite', header="True")
-
-Summary.write.mode("overwrite") \
-    .format("jdbc") \
-    .option("url", "jdbc:oracle:thin:@//localhost:1521/freepdb1") \
-    .option("driver", "oracle.jdbc.driver.OracleDriver") \
-    .option("dbtable", "contact_info_raw") \
-    .option("user", "scott") \
-    .option("password", "tiger") \
-    .save()
+# Summary = spark.createDataFrame(Summary)
+# Summary.show()
+# Summary.write.csv("Output/Summary", mode='overwrite', header="True")
+#
+# Summary.write.mode("overwrite") \
+#     .format("jdbc") \
+#     .option("url", "jdbc:oracle:thin:@//localhost:1521/freepdb1") \
+#     .option("driver", "oracle.jdbc.driver.OracleDriver") \
+#     .option("dbtable", "contact_info_raw") \
+#     .option("user", "scott") \
+#     .option("password", "tiger") \
+#     .save()
