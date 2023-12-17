@@ -5,11 +5,11 @@ import sys
 import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
-from Library.General_Purpose_Functions import count_validation,duplicate , \
+from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
 
-from Library.File_Read_functions import read_file
+from Utility.File_Read_functions import read_file
 
 from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode

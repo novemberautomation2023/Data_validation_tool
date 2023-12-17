@@ -1,6 +1,6 @@
-from Library.Database_Read_Functions import db_read
-from Library.File_Read_functions import read_file
-from Library.General_Purpose_Functions import count_validation,duplicate , \
+from Utility.Database_Read_Functions import db_read
+from Utility.File_Read_functions import read_file
+from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
 

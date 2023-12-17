@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
-from Library.File_Read_functions import read_file
-from Library.Database_Read_Functions import db_read
+from Utility.File_Read_functions import read_file
+from Utility.Database_Read_Functions import db_read
 from pyspark.sql.functions import count, when, isnan, isnull, col, trim
 
 spark = SparkSession.builder.master("local").appName("Data val func").getOrCreate()
