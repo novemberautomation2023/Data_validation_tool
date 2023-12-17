@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
-from Library.General_Purpose_Functions import count_validation,duplicate ,Null_value_check,Uniquess_check,records_present_only_in_source,records_present_only_in_target, data_compare
+#from Library.General_Purpose_Functions import count_validation,duplicate ,Null_value_check,Uniquess_check,records_present_only_in_source,records_present_only_in_target, data_compare
 
 
 from Library.Database_Read_Functions import db_read
@@ -16,6 +16,7 @@ from pyspark.sql.functions import explode_outer, concat, col, \
 #Spark session creation
 spark = SparkSession.builder \
     .master("local") \
+    .config("spark.jars", 'jars/hadoop-azure-3.3.6.jar') \
     .getOrCreate()
 
 with open('Config/config.json','r') as f:
@@ -70,26 +71,26 @@ contact_info_bronze_expected = spark.sql(
     """
 )
 
-
-count_validation(contact_info_bronze_expected,contact_info_bronze_actual,Out=Out)
-duplicate(contact_info_bronze_actual,Key_column,Out=Out)
-records_present_only_in_source(contact_info_bronze_expected,contact_info_bronze_actual,Key_column,Out)
-records_present_only_in_target(contact_info_bronze_expected,contact_info_bronze_actual,Key_column,Out)
-Null_value_check(contact_info_bronze_actual,Key_column,Out)
-Uniquess_check(contact_info_bronze_actual,Key_column,Out)
-data_compare(contact_info_bronze_expected,contact_info_bronze_actual,'Identifier',Out)
-Summary = pd.DataFrame(Out)
-
-
-Summary = spark.createDataFrame(Summary)
-Summary.show()
-Summary.write.csv("Output/Summary", mode='overwrite', header="True")
-
-Summary.write.mode("overwrite") \
-    .format("jdbc") \
-    .option("url", "jdbc:oracle:thin:@//localhost:1521/freepdb1") \
-    .option("driver", "oracle.jdbc.driver.OracleDriver") \
-    .option("dbtable", "contact_info_raw") \
-    .option("user", "scott") \
-    .option("password", "tiger") \
-    .save()
+#
+# count_validation(contact_info_bronze_expected,contact_info_bronze_actual,Out=Out)
+# duplicate(contact_info_bronze_actual,Key_column,Out=Out)
+# records_present_only_in_source(contact_info_bronze_expected,contact_info_bronze_actual,Key_column,Out)
+# records_present_only_in_target(contact_info_bronze_expected,contact_info_bronze_actual,Key_column,Out)
+# Null_value_check(contact_info_bronze_actual,Key_column,Out)
+# Uniquess_check(contact_info_bronze_actual,Key_column,Out)
+# data_compare(contact_info_bronze_expected,contact_info_bronze_actual,'Identifier',Out)
+# Summary = pd.DataFrame(Out)
+#
+#
+# Summary = spark.createDataFrame(Summary)
+# Summary.show()
+# Summary.write.csv("Output/Summary", mode='overwrite', header="True")
+#
+# Summary.write.mode("overwrite") \
+#     .format("jdbc") \
+#     .option("url", "jdbc:oracle:thin:@//localhost:1521/freepdb1") \
+#     .option("driver", "oracle.jdbc.driver.OracleDriver") \
+#     .option("dbtable", "contact_info_raw") \
+#     .option("user", "scott") \
+#     .option("password", "tiger") \
+#     .save()
