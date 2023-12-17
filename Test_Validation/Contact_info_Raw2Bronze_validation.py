@@ -343,6 +343,7 @@ def write_output(TC_ID,Test_Case_Name,Number_of_source_Records,Number_of_target_
 spark = SparkSession.builder \
     .master("local") \
     .config("spark.jars", 'jars/hadoop-azure-3.3.6.jar') \
+    .config("spark.jars", 'jars/ojdbc11.jar') \
     .getOrCreate()
 
 with open('Config/config.json','r') as f:
