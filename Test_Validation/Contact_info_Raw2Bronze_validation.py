@@ -16,7 +16,6 @@ from pyspark.sql.functions import explode_outer, concat, col, \
 #Spark session creation
 spark = SparkSession.builder \
     .master("local") \
-    .config("spark.jars", 'jars/hadoop-azure-3.3.6.jar') \
     .getOrCreate()
 
 with open('Config/config.json','r') as f:
