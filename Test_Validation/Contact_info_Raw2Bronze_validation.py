@@ -40,6 +40,50 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
 
+
+
+
+def db_read(url,username, password,query,driver,spark):
+    df= spark.read.format("jdbc"). \
+        option("url", url). \
+        option("password", password). \
+        option("user", username). \
+        option("query", query). \
+        option("driver", driver).load()
+    return df
+
+def db_write(df,url,username, password,table,driver,spark):
+    df.write.mode("overwrite") \
+        .format("jdbc") \
+        .option("url", url) \
+        .option("driver", driver) \
+        .option("dbtable", table) \
+        .option("user", username) \
+        .option("password", password) \
+        .save()
+
+def kafka_read(spark):
+    df = spark \
+        .readStream \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", "host1:port1,host2:port2") \
+        .option("subscribe", "topic1") \
+        .option("includeHeaders", "true") \
+        .load()
+    return df
+
+
+
+
+
+
+
+
+
+
+
+
+
 def count_validation(sourceDF, targetDF,Out):
     source_count = sourceDF.count()
     target_count = targetDF.count()
