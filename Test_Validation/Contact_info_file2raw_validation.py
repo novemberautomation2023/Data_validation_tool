@@ -8,16 +8,26 @@ from pyspark.sql import functions as F
 from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
-
-
-
 from Utility.File_Read_functions import read_file
 #
 from Utility.Database_Read_Functions import db_read
 
 from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode
-from conftest import project_path, config_file_data,Out,spark
+#from conftest import project_path, config_file_data,Out,spark
+
+with open('/home/runner/work/Data_validation_tool/Data_validation_tool/Config/config.json','r') as f:
+    config_file_data = json.loads(f.read())
+
+Out = {"TC_ID":[], "test_Case_Name":[], "Number_of_source_Records":[], "Number_of_target_Records":[], "Number_of_failed_Records":[],"Status":[]}
+schema= ["TC_ID", "test_Case_Name", "Number_of_source_Records", "Number_of_target_Records", "Number_of_failed_Records","Status"]
+
+
+spark = SparkSession.builder \
+    .master("local") \
+    .config("spark.jars", '/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/hadoop-azure-3.3.6.jar') \
+    .getOrCreate()
+
 print(config_file_data['contact_info'])
 
 path= config_file_data['contact_info']['source_file']
