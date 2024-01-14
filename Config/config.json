@@ -38,7 +38,7 @@
   },
   "contact_info":
   {
-    "source_file": "/Users/harish/PycharmProjects/Data_validation_tool/Source_Files/Contact_info.csv",
+    "source_file": "/home/runner/work/Data_validation_tool/Data_validation_tool/Source_Files/Contact_info.csv",
     "source_file_type" : "csv",
     "db_Address":"jdbc:oracle:thin:@//localhost:1521/freepdb1",
     "db_Port":	1521,
