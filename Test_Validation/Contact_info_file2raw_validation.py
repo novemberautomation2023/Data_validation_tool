@@ -16,7 +16,7 @@ from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode
 #from conftest import project_path, config_file_data,Out,spark
 
-with open('/home/runner/work/Data_validation_tool/Data_validation_tool/Config/config.json','r') as f:
+with open('/Config/config.json','r') as f:
     config_file_data = json.loads(f.read())
 
 Out = {"TC_ID":[], "test_Case_Name":[], "Number_of_source_Records":[], "Number_of_target_Records":[], "Number_of_failed_Records":[],"Status":[]}

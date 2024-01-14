@@ -8,14 +8,25 @@ from pyspark.sql import functions as F
 from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
-
 from Utility.File_Read_functions import read_file
-
+#
 from Utility.Database_Read_Functions import db_read
 
 from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode
-from conftest import project_path, config_file_data,Out,spark
+#from conftest import project_path, config_file_data,Out,spark
+
+with open('/Config/config.json','r') as f:
+    config_file_data = json.loads(f.read())
+
+Out = {"TC_ID":[], "test_Case_Name":[], "Number_of_source_Records":[], "Number_of_target_Records":[], "Number_of_failed_Records":[],"Status":[]}
+schema= ["TC_ID", "test_Case_Name", "Number_of_source_Records", "Number_of_target_Records", "Number_of_failed_Records","Status"]
+
+
+spark = SparkSession.builder \
+    .master("local") \
+    .getOrCreate()
+
 print(config_file_data['contact_info'])
 
 path= config_file_data['contact_info']['source_file']
@@ -50,4 +61,4 @@ Summary = pd.DataFrame(Out)
 
 Summary = spark.createDataFrame(Summary)
 Summary.show()
-Summary.write.csv("/Users/harish/PycharmProjects/Data_validation_tool/Output/Summary", mode='append', header="True")
+#Summary.write.csv("/Users/harish/PycharmProjects/Data_validation_tool/Output/Summary", mode='append', header="True")
