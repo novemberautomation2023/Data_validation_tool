@@ -1,0 +1,53 @@
+import datetime
+import json
+import os
+import sys
+import pandas as pd
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from Utility.General_Purpose_Functions import count_validation,duplicate , \
+     Null_value_check,Uniquess_check,records_present_only_in_source,\
+     records_present_only_in_target, data_compare
+
+from Utility.File_Read_functions import read_file
+
+from Utility.Database_Read_Functions import db_read
+
+from pyspark.sql.functions import explode_outer, concat, col, \
+    trim,to_date, lpad, lit, count,max, min, explode
+from conftest import project_path, config_file_data,Out,spark
+print(config_file_data['contact_info'])
+
+path= config_file_data['contact_info']['source_file']
+format = config_file_data['contact_info']['source_file_type']
+db_Address = config_file_data['contact_info']['db_Address']
+db_port= config_file_data['contact_info']['db_Port']
+db_Username= config_file_data['contact_info']['db_Username']
+db_Password= config_file_data['contact_info']['db_Password']
+db_driver= config_file_data['contact_info']['db_driver']
+query = config_file_data['contact_info']['query']
+Key_column = config_file_data['contact_info']['Key_column']
+
+#Reading source1
+
+Source1= read_file(format,path,spark)
+#Target1= db_read(db_Address,db_Username,db_Password,query,db_driver,spark)
+Target1= read_file(format,path,spark)
+Source1.show()
+Target1.show()
+
+
+count_validation(Source1,Target1,Out=Out)
+duplicate(Target1,Key_column,Out=Out)
+records_present_only_in_source(Source1,Target1,Key_column,Out)
+records_present_only_in_target(Source1,Target1,Key_column,Out)
+Null_value_check(Target1,Key_column,Out)
+Uniquess_check(Target1,Key_column,Out)
+data_compare(Source1,Target1,'Identifier',Out)
+Summary = pd.DataFrame(Out)
+# This code comment
+# This comment2
+
+Summary = spark.createDataFrame(Summary)
+Summary.show()
+Summary.write.csv("/Users/harish/PycharmProjects/Data_validation_tool/Output/Summary", mode='append', header="True")
