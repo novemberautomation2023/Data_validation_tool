@@ -25,7 +25,6 @@ schema= ["TC_ID", "test_Case_Name", "Number_of_source_Records", "Number_of_targe
 
 spark = SparkSession.builder \
     .master("local") \
-    .config("spark.jars", '/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/hadoop-azure-3.3.6.jar') \
     .getOrCreate()
 
 print(config_file_data['contact_info'])
