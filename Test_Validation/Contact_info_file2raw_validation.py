@@ -61,4 +61,4 @@ Summary = pd.DataFrame(Out)
 
 Summary = spark.createDataFrame(Summary)
 Summary.show()
-Summary.write.csv("/Users/harish/PycharmProjects/Data_validation_tool/Output/Summary", mode='append', header="True")
+#Summary.write.csv("/Users/harish/PycharmProjects/Data_validation_tool/Output/Summary", mode='append', header="True")
