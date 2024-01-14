@@ -1,5 +1,0 @@
-TC_ID,test_Case_Name,Number_of_source_Records,Number_of_target_Records,Number_of_failed_Records,Status
-1,Count_validation,10,10,0,pass
-1,Count_validation,10,10,0,pass
-2,duplicate,NA,20,10,Fail
-1,Count_validation,20,20,0,pass

@@ -15,16 +15,7 @@ from Utility.Database_Read_Functions import db_read
 
 from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode
-
-#Spark session creation
-spark = SparkSession.builder \
-    .master("local") \
-    .config("spark.jars", '/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/hadoop-azure-3.3.6.jar') \
-    .getOrCreate()
-
-with open('Config/config.json','r') as f:
-    config_file_data = json.loads(f.read())
-
+from conftest import project_path, config_file_data,Out,spark
 print(config_file_data['contact_info'])
 
 path= config_file_data['contact_info']['source_file']
@@ -44,9 +35,6 @@ Target1= db_read(db_Address,db_Username,db_Password,query,db_driver,spark)
 
 Source1.show()
 Target1.show()
-
-Out = {"TC_ID":[], "test_Case_Name":[], "Number_of_source_Records":[], "Number_of_target_Records":[], "Number_of_failed_Records":[],"Status":[]}
-schema= ["TC_ID", "test_Case_Name", "Number_of_source_Records", "Number_of_target_Records", "Number_of_failed_Records","Status"]
 
 
 count_validation(Source1,Target1,Out=Out)
