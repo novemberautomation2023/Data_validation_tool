@@ -31,8 +31,8 @@ Key_column = config_file_data['contact_info']['Key_column']
 #Reading source1
 
 Source1= read_file(format,path,spark)
-Target1= db_read(db_Address,db_Username,db_Password,query,db_driver,spark)
-
+#Target1= db_read(db_Address,db_Username,db_Password,query,db_driver,spark)
+Target1= read_file(format,path,spark)
 Source1.show()
 Target1.show()
 
