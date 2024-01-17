@@ -15,10 +15,14 @@ from Utility.Database_Read_Functions import db_read
 from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode
 #from conftest import project_path, config_file_data,Out,spark
-current_dir = os.path.dirname(__file__)
-print("current_dir", current_dir)
+import sys
+parent_path = os.path.dirname(os.path.dirname(__file__))
+set_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print("set path", set_path)
+sys.path.append(set_path)
 
-with open(current_dir+'/config.json','r') as f:
+print("Parent path",parent_path)
+with open(parent_path+'/Config/config.json','r') as f:
     config_file_data = json.loads(f.read())
 
 Out = {"TC_ID":[], "test_Case_Name":[], "Number_of_source_Records":[], "Number_of_target_Records":[], "Number_of_failed_Records":[],"Status":[]}
@@ -31,7 +35,8 @@ spark = SparkSession.builder \
 
 print(config_file_data['contact_info'])
 
-path= config_file_data['contact_info']['source_file']
+path= parent_path+config_file_data['contact_info']['source_file']
+print("concat",parent_path)
 format = config_file_data['contact_info']['source_file_type']
 db_Address = config_file_data['contact_info']['db_Address']
 db_port= config_file_data['contact_info']['db_Port']
