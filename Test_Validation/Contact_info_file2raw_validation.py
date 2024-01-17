@@ -1,3 +1,8 @@
+import os
+import sys
+set_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print("set path", set_path)
+sys.path.append(set_path)
 import datetime
 import json
 import os
