@@ -34,6 +34,8 @@ validations.show(truncate=False)
 
 validations = validations.collect()
 
+
+
 print(validations)
 
 Out = {"TC_ID":[], "test_Case_Name":[], "Number_of_source_Records":[], "Number_of_target_Records":[], "Number_of_failed_Records":[],"Status":[]}
