@@ -5,7 +5,7 @@ Description = 'Data test automation'
 url = 'https://github.com/novemberautomation2023/Data_validation_tool.git'
 version = '1.1'
 
-Required = ['pytest']
+Required = ['pytest','openpyxl']
 
 setup(
     name=Name,
