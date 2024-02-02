@@ -8,10 +8,10 @@
    },
   "postgre_db":
   {
-    "url":"jdbc:oracle:thin:@//localhost:1521/freepdb1",
-    "user":	"scott",
-    "password":	"tiger",
-    "driver": "oracle.jdbc.driver.OracleDriver"
+    "url":"jdbc:postgresql://localhost:5432/postgres",
+    "user":	"postgres",
+    "password":	"Dharmavaram1@",
+    "driver": "org.postgresql.Driver"
 
   }
 
