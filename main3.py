@@ -10,16 +10,13 @@ import json
 import openpyxl
 from pyspark.sql.functions import collect_set
 
-jar_path='/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/sqljdbc4-2.0.jar'
-spark = SparkSession.builder.master("local").appName("test_execution")\
-     .config("spark.jars", "/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/ojdbc8-21.5.0.0.jar") \
-     .config("spark.driver.extraClassPath", "/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/ojdbc8-21.5.0.0.jar") \
-     .config("spark.executor.extraClassPath","/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/ojdbc8-21.5.0.0.jar") \
-     .getOrCreate()
+
+spark = SparkSession.builder.master("local").appName("test_execution").getOrCreate()
 
 
+template_path = pkg_resources.resource_filename('Config', 'Master_Test_Template.xlsx')
 
-Test_cases = pd.read_excel("/Users/harish/PycharmProjects/Data_validation_tool/Config/Master_Test_Template.xlsx")
+Test_cases = pd.read_excel(template_path)
 run_test_case = Test_cases.loc[(Test_cases.execution_ind=='Y')]
 
 print(run_test_case)
