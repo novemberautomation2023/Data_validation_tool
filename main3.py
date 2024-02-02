@@ -1,3 +1,5 @@
+import pkg_resources
+
 from Utility.Database_Read_Functions import db_read
 from Utility.read_data import read_data
 from Utility.General_Purpose_Functions import *
@@ -44,16 +46,17 @@ schema= ["TC_ID", "test_Case_Name", "Number_of_source_Records", "Number_of_targe
 for row in validations:
     print(row['source'])
     if row['source_type'] == 'table':
-
-        source = read_data(row['source_type'], row['source'], spark, database=row['target_db_name'])
+        source = read_data(row['source_type'], row['source'], spark=spark, database=row['target_db_name'],sql_path=row['target_transformation_query_path'])
     else:
-        source = read_data(row['source_type'], row['source'], spark)
+        source_path = pkg_resources.resource_filename('Source_Files', row['source'])
+        source = read_data(row['source_type'], source_path, spark)
 
     if row['target_type'] == 'table':
         print(row['target_type'], row['target'], row['target_db_name'])
-        target = read_data(row['target_type'], row['target'], spark, database=row['target_db_name'])
+        target = read_data(row['target_type'], row['target'], spark=spark, database=row['target_db_name'],sql_path=row['target_transformation_query_path'])
     else:
-        target = read_data(row['target_type'], row['target'], spark)
+        target_path = pkg_resources.resource_filename('Source_Files', row['source'])
+        target = read_data(row['target_type'], target_path, spark)
     source.show(n=2)
     target.show(n=2)
     for validation in row['validation_Type']:

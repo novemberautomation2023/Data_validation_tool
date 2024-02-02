@@ -3,13 +3,15 @@ import logging
 import os
 import json
 
+import pkg_resources
+
 logging.basicConfig(filename="newfile.log",
                     level=logging.INFO, #NDIWEC
                     filemode='w',
                     format='%(asctime)s:%(levelname)s:%(message)s')
 logger = logging.getLogger()
 
-def read_data(format,path,spark, delimiter=None, multiline=None, query=None,database=None):
+def read_data(format,path,spark, delimiter=None, multiline=None, sql_path=None,database=None):
     if format.lower() == 'csv':
         if delimiter is None:
             df = spark.read.option("header", True).option("delimiter",",").csv(path)
@@ -36,10 +38,13 @@ def read_data(format,path,spark, delimiter=None, multiline=None, query=None,data
         logger.info("Avro file has read successfully from the below path" + path)
 
     elif format.lower() == 'table':
-        with open("/Users/harish/PycharmProjects/Data_validation_tool/Config/config.json",'r') as f:
+        conf_file_path = pkg_resources.resource_filename('Config', 'config.json')
+        with open(conf_file_path,'r') as f:
             config_data = json.loads(f.read())[database]
-        with open("/Users/harish/PycharmProjects/Data_validation_tool/Transformations_queries/contact_info.sql", "r") as file:
-            sql_query = file.read()
+        if sql_path is not None:
+            sql_path = pkg_resources.resource_filename('Transformations_queries', sql_path)
+            with open(sql_path, "r") as file:
+                sql_query = file.read()
         print(sql_query)
         print(config_data)
         df = spark.read.format("jdbc"). \
