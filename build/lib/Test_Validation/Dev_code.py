@@ -9,7 +9,7 @@ from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
 
-from Utility.File_Read_functions import read_file
+from Utility.read_data import read_file
 
 from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode

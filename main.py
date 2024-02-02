@@ -1,5 +1,5 @@
 from Utility.Database_Read_Functions import db_read
-from Utility.File_Read_functions import read_file
+from Utility.read_data import read_data
 from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
@@ -10,7 +10,7 @@ import json
 import openpyxl
 from pyspark.sql.functions import collect_set
 
-jar_path='/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/sqljdbc4-2.0.jar'
+
 spark = SparkSession.builder.master("local").appName("test_execution")\
      .config("spark.jars", "/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/ojdbc8-21.5.0.0.jar") \
      .config("spark.driver.extraClassPath", "/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/ojdbc8-21.5.0.0.jar") \

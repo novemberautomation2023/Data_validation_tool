@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from Utility.File_Read_functions import read_file
+from Utility.read_data import read_data
 from Utility.Database_Read_Functions import db_read
 from pyspark.sql.functions import abs,count, when, isnan, isnull, col, trim
 import datetime
@@ -27,7 +27,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
 
-def count_validation(sourceDF, targetDF,Out):
+def count_validation(sourceDF, targetDF,Out : dict):
     source_count = sourceDF.count()
     target_count = targetDF.count()
     if source_count == target_count:
@@ -38,7 +38,8 @@ def count_validation(sourceDF, targetDF,Out):
         write_output(1, "Count_validation", source_count, target_count, "fail", source_count - target_count, Out)
 
 
-def duplicate(dataframe, key_column,Out):
+def duplicate(dataframe, key_column : list,Out):
+    key_column = key_column.split(",")
     dup_df = dataframe.groupBy(key_column).count().filter('count>1')
     target_count = dataframe.count()
     if dup_df.count()>0:
@@ -50,8 +51,9 @@ def duplicate(dataframe, key_column,Out):
         write_output(2, "duplicate", "NA", target_count, "pass", 0, Out)
 
 
-def Uniquess_check(dataframe, unique_column,Out):
+def Uniquess_check(dataframe, unique_column : list,Out):
     target_count = dataframe.count()
+    unique_column = unique_column.split(",")
     for column in unique_column:
         dup_df = dataframe.groupBy(column).count().filter('count>1')
         if dup_df.count()>0:
@@ -64,6 +66,7 @@ def Uniquess_check(dataframe, unique_column,Out):
 
 def Null_value_check(dataframe, Null_columns,Out):
     target_count = dataframe.count()
+    Null_columns = Null_columns.split(",")
     for column in Null_columns:
         Null_df = dataframe.select(count(when(col(column).contains('None') | \
                                         col(column).contains('NULL') | \
@@ -75,13 +78,12 @@ def Null_value_check(dataframe, Null_columns,Out):
         # dataframe.createOrReplaceTempView("dataframe")
         # Null_df = spark.sql(f"select count(*) source_cnt from dataframe where {column} is null")
         cnt = Null_df.collect()
+        print(cnt)
 
-        if cnt[0][0]>=1:
+        if cnt[0]['Null_value_count']>0:
             print(f"{column} columns has Null values")
             Null_df.show(10)
             write_output(4, "Null_value_check", "NA", target_count, "fail", cnt[0][0], Out)
-
-
         else:
             print("No null records present")
             write_output(4, "Null_value_check", "NA", target_count, "pass", 0, Out)
@@ -89,7 +91,8 @@ def Null_value_check(dataframe, Null_columns,Out):
 
 
 
-def records_present_only_in_target(source,target,keyList,Out):
+def records_present_only_in_target(source,target,keyList:list,Out):
+    keyList = keyList.split(",")
     srctemp = source.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "SourceCount")
     tartemp = target.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "TargetCount")
     count_compare = srctemp.join(tartemp, keyList, how='full_outer')
@@ -106,6 +109,7 @@ def records_present_only_in_target(source,target,keyList,Out):
 
 
 def records_present_only_in_source(source,target,keyList,Out):
+    keyList = keyList.split(",")
     srctemp = source.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "SourceCount")
     tartemp = target.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "TargetCount")
     count_compare = srctemp.join(tartemp, keyList, how='full_outer')
@@ -124,6 +128,7 @@ def records_present_only_in_source(source,target,keyList,Out):
 
 
 def data_compare( source, target,keycolumn,Out):
+    keycolumn = keycolumn.split(",")
     for colname in source.columns:
         source = source.withColumn(colname, trim(col(colname)))
 
@@ -132,11 +137,14 @@ def data_compare( source, target,keycolumn,Out):
     columnList = source.columns
     for column in columnList:
         if column not in keycolumn:
-            temp_source= source.select(keycolumn, column).withColumnRenamed(column,"source_"+column)
-            temp_target=target.select(keycolumn, column).withColumnRenamed(column,"target_"+column)
+            keycolumn.append(column)
+            temp_source= source.select(keycolumn).withColumnRenamed(column,"source_"+column)
+            temp_target=target.select(keycolumn).withColumnRenamed(column,"target_"+column)
+            keycolumn.remove(column)
             temp_join = temp_source.join(temp_target,keycolumn,how='full_outer')
             temp_join.withColumn("comparison", when(col('source_'+column) == col("target_"+column),\
-                                                    "True" ).otherwise("False")).show()
+                                                    "True" ).otherwise("False")).filter("comparison == False")
+
 
 def compare(source, target,countQA, keyList,Out):
     sourceDaraFrame = source
@@ -174,7 +182,7 @@ def compare(source, target,countQA, keyList,Out):
         write_output(5, "Datavalidation", countQA, countQA, "PASS", 0, Out)
     return Summary
 
-def get_dataset (keyList, keyDict, dataframe):
+def get_dataset(keyList, keyDict, dataframe, one_more_value):
     var_dict = {}
     condition = ''
     #print keyDict
@@ -242,7 +250,7 @@ def run_compare_for_column(keyList, column, sourceDataFrame, targetDataFrame, sa
         print('-----------------------------------------------')
         keyListdata = sampleData.select(keyList).first().asDict()
         print('Source dataFrame details')
-        get_dataset(keyList,keyListdata, sourceDataFrame)
+        get_dataset(keyList,keyListdata, sourceDataFrame,'abc')
         print("Target dataFrame details")
         get_dataset(keyList, keyListdata, targetDataFrame)
 

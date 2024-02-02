@@ -8,7 +8,7 @@ from pyspark.sql import functions as F
 from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
-from Utility.File_Read_functions import read_file
+from Utility.read_data import read_file
 #
 from Utility.Database_Read_Functions import db_read
 

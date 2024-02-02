@@ -13,7 +13,7 @@ from pyspark.sql import functions as F
 from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
-from Utility.File_Read_functions import read_file
+from Utility.read_data import read_file
 #
 from Utility.Database_Read_Functions import db_read
 
@@ -25,7 +25,7 @@ parent_path = os.path.dirname(os.path.dirname(__file__))
 set_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print("set path", set_path)
 sys.path.append(set_path)
-
+print("#"*30)
 print("Parent path",parent_path)
 with open(parent_path+'/Config/config.json','r') as f:
     config_file_data = json.loads(f.read())

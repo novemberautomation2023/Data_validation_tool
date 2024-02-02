@@ -10,7 +10,7 @@ from Utility.General_Purpose_Functions import count_validation,duplicate , \
      records_present_only_in_target, data_compare,compare
 
 
-from Utility.File_Read_functions import read_file
+from Utility.read_data import read_file
 
 from Utility.Database_Read_Functions import db_read
 
