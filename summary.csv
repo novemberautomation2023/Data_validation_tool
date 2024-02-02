@@ -8,8 +8,8 @@
 6,1,Count_validation,10,10,0,pass
 7,4,Null_value_check,NA,10,0,pass
 8,4,Null_value_check,NA,10,0,pass
-9,5,records_present_only_in_target,10,10,0,Pass
+9,5,records_present_only_in_target,10,10,0,fail
 10,3,Uniqueness,NA,10,0,Pass
 11,2,duplicate,NA,10,0,pass
-12,6,records_present_only_in_target,10,10,0,Pass
+12,6,records_present_only_in_source,10,10,0,fail
 13,1,Count_validation,10,10,0,pass

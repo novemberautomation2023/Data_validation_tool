@@ -10,9 +10,13 @@ import json
 import openpyxl
 from pyspark.sql.functions import collect_set
 
-
-spark = SparkSession.builder.master("local").appName("test_execution").getOrCreate()
-
+jar_path = pkg_resources.resource_filename('jars', 'postgresql-42.2.5.jar')
+spark = SparkSession.builder.master("local")\
+    .appName("test") \
+    .config("spark.jars",jar_path)\
+    .config("spark.driver.extraClassPath",jar_path) \
+    .config("spark.executor.extraClassPath",jar_path) \
+    .getOrCreate()
 
 template_path = pkg_resources.resource_filename('Config', 'Master_Test_Template.xlsx')
 

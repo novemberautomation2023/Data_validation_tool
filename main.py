@@ -52,7 +52,7 @@ for key,value in group_user.iterrows():
           source_info= config_file_data[Source_file_info]
           path=source_info['path']
           format=source_info['file_type']
-          source = read_file(format,path, spark)
+          source = read_data(format,path, spark)
           source.show()
      else:
           source_info = config_file_data[Source_Database_info]
