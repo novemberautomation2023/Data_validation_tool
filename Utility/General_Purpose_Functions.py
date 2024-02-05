@@ -101,6 +101,7 @@ def Null_value_check(dataframe, Null_columns,Out,row):
 
 
 def records_present_only_in_target(source,target,keyList:list,Out,row):
+    columns=keyList
     keyList = keyList.split(",")
     srctemp = source.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "SourceCount")
     tartemp = target.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "TargetCount")
@@ -111,13 +112,14 @@ def records_present_only_in_target(source,target,keyList:list,Out,row):
     target_count = target.count()
     if failed > 0:
         count_compare.filter("SourceCount is null").show()
-        write_output(5, "records_present_only_in_target", row["source"], row["target"], "NA", target_count, failed, keyList, "pass", Out)
+        write_output(5, "records_present_only_in_target", row["source"], row["target"], source_count, target_count, failed, columns, "pass", Out)
 
     else:
         print("No extra records present in source")
-        write_output(5, "records_present_only_in_target", row["source"], row["target"], "NA", target_count, 0, keyList, "pass", Out)
+        write_output(5, "records_present_only_in_target", row["source"], row["target"], source_count, target_count, 0, columns, "pass", Out)
 
 def records_present_only_in_source(source,target,keyList,Out,row):
+    columns = keyList
     keyList = keyList.split(",")
     srctemp = source.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "SourceCount")
     tartemp = target.select(keyList).groupBy(keyList).count().withColumnRenamed("count", "TargetCount")
@@ -128,12 +130,12 @@ def records_present_only_in_source(source,target,keyList,Out,row):
     print("Key column record present in Source but not in target :" + str(count))
     if failed > 0:
         count_compare.filter("TargetCount is null").show()
-        write_output(6, "records_present_only_in_source", row["source"], row["target"], "NA", target_count, failed, keyList, "pass", Out)
+        write_output(6, "records_present_only_in_source", row["source"], row["target"], source_count, target_count, failed, columns, "pass", Out)
 
 
     else:
         print("No extra records present")
-        write_output(6, "records_present_only_in_source", row["source"], row["target"], "NA", target_count, 0, keyList, "pass", Out)
+        write_output(6, "records_present_only_in_source", row["source"], row["target"], source_count, target_count, 0, columns, "pass", Out)
 
 
 def data_compare( source, target,keycolumn,Out):
