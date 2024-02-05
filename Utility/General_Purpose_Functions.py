@@ -37,7 +37,7 @@ def count_validation(sourceDF, targetDF,Out : dict, row):
         write_output(1,"Count_validation",row["source"],row["target"],source_count,target_count,0,row['key_col_list'],"pass",Out)
     else:
         print("Source count and taget count is not matching and difference is",source_count-target_count)
-        write_output(1,"Count_validation",row["source"],row["target"],source_count,target_count,diff,row['key_col_list'],"pass",Out)
+        write_output(1,"Count_validation",row["source"],row["target"],source_count,target_count,diff,row['key_col_list'],"fail",Out)
 
 
 def duplicate(dataframe, key_column : list,Out,row):
@@ -48,7 +48,7 @@ def duplicate(dataframe, key_column : list,Out,row):
     if dup_df.count()>0:
         print("Duplicates present")
         dup_df.show(10)
-        write_output(2,"duplicate_validation","NA",row["target"],"NA",target_count,failed,row['key_col_list'],"pass",Out)
+        write_output(2,"duplicate_validation","NA",row["target"],"NA",target_count,failed,row['key_col_list'],"fail",Out)
     else:
         print("No duplicates")
         write_output(2,"duplicate_validation","NA",row["target"],"NA",target_count,failed,row['key_col_list'],"pass",Out)
@@ -63,7 +63,7 @@ def Uniquess_check(dataframe, unique_column : list,Out,row):
         if dup_df.count()>0:
             print(f"{column} columns has duplicate")
             dup_df.show(10)
-            write_output(3,"Uniquess_check","NA",row["target"],"NA",target_count,failed,column,"pass",Out)
+            write_output(3,"Uniquess_check","NA",row["target"],"NA",target_count,failed,column,"fail",Out)
 
         else:
             print("All records has unique records")
@@ -84,13 +84,11 @@ def Null_value_check(dataframe, Null_columns,Out,row):
         # dataframe.createOrReplaceTempView("dataframe")
         # Null_df = spark.sql(f"select count(*) source_cnt from dataframe where {column} is null")
         print("Null count",Null_df.count())
-        cnt = Null_df.collect()
-        failed= cnt[0]['Null_value_count']
+        failed= Null_df.count()
 
-        if cnt[0]['Null_value_count']>0:
+        if Null_df.count() >0 :
             print(f"{column} columns has Null values")
-            Null_df.show(10)
-            write_output(4,"Null_value_check","NA",row["target"],"NA",target_count,failed,column,"pass",Out)
+            write_output(4,"Null_value_check","NA",row["target"],"NA",target_count,failed,column,"fail",Out)
 
         else:
             print("No null records present")
@@ -112,7 +110,7 @@ def records_present_only_in_target(source,target,keyList:list,Out,row):
     target_count = target.count()
     if failed > 0:
         count_compare.filter("SourceCount is null").show()
-        write_output(5, "records_present_only_in_target", row["source"], row["target"], source_count, target_count, failed, columns, "pass", Out)
+        write_output(5, "records_present_only_in_target", row["source"], row["target"], source_count, target_count, failed, columns, "fail", Out)
 
     else:
         print("No extra records present in source")
@@ -130,7 +128,7 @@ def records_present_only_in_source(source,target,keyList,Out,row):
     print("Key column record present in Source but not in target :" + str(count))
     if failed > 0:
         count_compare.filter("TargetCount is null").show()
-        write_output(6, "records_present_only_in_source", row["source"], row["target"], source_count, target_count, failed, columns, "pass", Out)
+        write_output(6, "records_present_only_in_source", row["source"], row["target"], source_count, target_count, failed, columns, "fail", Out)
 
 
     else:
