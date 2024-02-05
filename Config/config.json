@@ -3,10 +3,33 @@
      "url": "jdbc:oracle:thin:@//localhost:1521/freepdb1",
      "user": "scott",
      "password": "tiger",
-     "driver": "oracle.jdbc.driver.OracleDriver",
-     "query" : "contact_info.sql"
+     "driver": "oracle.jdbc.driver.OracleDriver"
    },
   "postgre_db":
+  {
+    "url":"jdbc:postgresql://localhost:5432/postgres",
+    "user":	"postgres",
+    "password":	"Dharmavaram1@",
+    "driver": "org.postgresql.Driver"
+
+  },
+  "Mysql":
+  {
+    "url":"jdbc:postgresql://localhost:5432/postgres",
+    "user":	"postgres",
+    "password":	"Dharmavaram1@",
+    "driver": "org.postgresql.Driver"
+
+  },
+  "sqlserver":
+  {
+    "url":"jdbc:postgresql://localhost:5432/postgres",
+    "user":	"postgres",
+    "password":	"Dharmavaram1@",
+    "driver": "org.postgresql.Driver"
+
+  },
+  "Azureadls":
   {
     "url":"jdbc:postgresql://localhost:5432/postgres",
     "user":	"postgres",

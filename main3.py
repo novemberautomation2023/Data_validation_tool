@@ -39,15 +39,32 @@ validations.show(truncate=False)
 validations = validations.collect()
 
 
+print("*"*45)
+print(validations[0])
+print(validations[1])
 
-print(validations)
-
-Out = {"TC_ID":[], "test_Case_Name":[], "Number_of_source_Records":[], "Number_of_target_Records":[], "Number_of_failed_Records":[],"Status":[]}
-schema= ["TC_ID", "test_Case_Name", "Number_of_source_Records", "Number_of_target_Records", "Number_of_failed_Records","Status"]
+Out = {"TC_ID":[],
+       "test_Case_Name":[],
+       "Source_name":[],
+       "target_name":[],
+       "Number_of_source_Records":[],
+       "Number_of_target_Records":[],
+       "Number_of_failed_Records":[],
+       "column":[],
+       "Status":[],
+       }
+schema= ["TC_ID",
+         "test_Case_Name",
+         "Source_name",
+         "target_name",
+         "Number_of_source_Records",
+         "Number_of_target_Records",
+         "Number_of_failed_Records",
+         "column",
+         "Status"]
 
 
 for row in validations:
-    print(row['source'])
     if row['source_type'] == 'table':
         source = read_data(row['source_type'], row['source'], spark=spark, database=row['target_db_name'],sql_path=row['target_transformation_query_path'])
     else:
@@ -65,19 +82,19 @@ for row in validations:
     for validation in row['validation_Type']:
         print(validation)
         if validation == 'count_validation':
-            count_validation(source, target, Out)
+            count_validation(source, target, Out,row)
         elif validation == 'duplicate':
-            duplicate(target,row['key_col_list'], Out)
+            duplicate(target,row['key_col_list'], Out,row)
         elif validation == 'Null_value_check':
-            Null_value_check(target, row['null_col_list'], Out)
+            Null_value_check(target, row['null_col_list'], Out,row)
         elif validation == 'Uniquess_check':
-            Uniquess_check(target, row['unique_col_list'], Out)
+            Uniquess_check(target, row['unique_col_list'], Out,row)
 
         elif validation == 'records_present_only_in_source':
-            records_present_only_in_source(source, target, row['key_col_list'], Out)
+            records_present_only_in_source(source, target, row['key_col_list'], Out,row)
 
         elif validation == 'records_present_only_in_target':
-            records_present_only_in_target(source, target, row['key_col_list'], Out)
+            records_present_only_in_target(source, target, row['key_col_list'], Out,row)
 
         elif validation == 'data_compare':
             data_compare(source, target, row['key_col_list'], Out)
@@ -87,5 +104,6 @@ for row in validations:
 df = pd.DataFrame(Out)
 
 df.to_csv("summary.csv")
+
 
 spark.createDataFrame(df).show()
