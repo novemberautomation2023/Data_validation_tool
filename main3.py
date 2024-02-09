@@ -29,19 +29,17 @@ print(run_test_case.columns)
 
 df = spark.createDataFrame(run_test_case)
 
-validations = df.groupBy('source', 'source_type',
+validations = (df.groupBy('source', 'source_type',
        'source_db_name', 'source_transformation_query_path', 'target',
        'target_type', 'target_db_name', 'target_transformation_query_path',
-       'key_col_list', 'null_col_list', 'unique_col_list').agg(collect_set('validation_Type').alias('validation_Type'))
+       'key_col_list', 'null_col_list', 'unique_col_list').
+               agg(collect_set('validation_Type').alias('validation_Type')))
 
 validations.show(truncate=False)
 
 validations = validations.collect()
 
-
-print("*"*45)
-print(validations[0])
-print(validations[1])
+print(validations)
 
 Out = {"TC_ID":[],
        "test_Case_Name":[],
@@ -66,7 +64,7 @@ schema= ["TC_ID",
 
 for row in validations:
     if row['source_type'] == 'table':
-        source = read_data(row['source_type'], row['source'], spark=spark, database=row['target_db_name'],sql_path=row['target_transformation_query_path'])
+        source = read_data(row['source_type'], row['source'], spark=spark, database=row['source_db_name'],sql_path=row['target_transformation_query_path'])
     else:
         source_path = pkg_resources.resource_filename('Source_Files', row['source'])
         source = read_data(row['source_type'], source_path, spark)
@@ -75,7 +73,7 @@ for row in validations:
         print(row['target_type'], row['target'], row['target_db_name'])
         target = read_data(row['target_type'], row['target'], spark=spark, database=row['target_db_name'],sql_path=row['target_transformation_query_path'])
     else:
-        target_path = pkg_resources.resource_filename('Source_Files', row['source'])
+        target_path = pkg_resources.resource_filename('Source_Files', row['target'])
         target = read_data(row['target_type'], target_path, spark)
     source.show(n=2)
     target.show(n=2)
@@ -103,7 +101,7 @@ for row in validations:
 
 df = pd.DataFrame(Out)
 
-df.to_csv("summary.csv")
+df.to_excel("summary.xlsx")
 
 
 spark.createDataFrame(df).show()

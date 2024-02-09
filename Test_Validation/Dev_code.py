@@ -9,7 +9,7 @@ from Utility.General_Purpose_Functions import count_validation,duplicate , \
      Null_value_check,Uniquess_check,records_present_only_in_source,\
      records_present_only_in_target, data_compare
 
-from Utility.read_data import read_file
+from Utility.read_data import read_data
 
 from pyspark.sql.functions import explode_outer, concat, col, \
     trim,to_date, lpad, lit, count,max, min, explode
@@ -22,8 +22,8 @@ spark = SparkSession.builder \
 
 #Reading source1
 
-file= read_file("csv",'Source_Files/Contact_info.csv',spark)
-file2 = read_file("csv",'/Users/harish/Desktop/Sourcedata2.csv',spark)
+file= read_data("csv",'/Users/harish/PycharmProjects/Data_validation_tool/Source_Files/Contact_info.csv',spark)
+file2 = read_data("csv",'/Users/harish/PycharmProjects/Data_validation_tool/Source_Files/Contact_info.csv',spark)
 
 
 
@@ -39,6 +39,8 @@ file2.write.mode("overwrite") \
 
 
 file3 = file.union(file2)
+
+print(file3.count())
 file.write.mode("overwrite") \
     .format("jdbc") \
     .option("url", "jdbc:oracle:thin:@//localhost:1521/freepdb1") \
@@ -73,7 +75,7 @@ contact_info_bronze = spark.sql(
     from file
     """
 )
-
+print("insert bronze")
 contact_info_bronze.write.mode("overwrite") \
     .format("jdbc") \
     .option("url", "jdbc:oracle:thin:@//localhost:1521/freepdb1") \
@@ -82,6 +84,7 @@ contact_info_bronze.write.mode("overwrite") \
     .option("user", "scott") \
     .option("password", "tiger") \
     .save()
+print("insert bronze success")
 
 contact_info_bronze.createOrReplaceTempView("contact_info_bronze")
 contact_info_bronze.show()
