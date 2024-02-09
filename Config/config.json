@@ -3,7 +3,8 @@
      "url": "jdbc:oracle:thin:@//localhost:1521/freepdb1",
      "user": "scott",
      "password": "tiger",
-     "driver": "oracle.jdbc.driver.OracleDriver"
+     "driver": "oracle.jdbc.driver.OracleDriver",
+     "jar_path" : "jars/ojdbc11.jar"
    },
   "postgre_db":
   {

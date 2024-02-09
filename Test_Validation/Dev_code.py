@@ -5,9 +5,7 @@ import sys
 import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
-from Utility.General_Purpose_Functions import count_validation,duplicate , \
-     Null_value_check,Uniquess_check,records_present_only_in_source,\
-     records_present_only_in_target, data_compare
+
 
 from Utility.read_data import read_data
 
@@ -17,30 +15,28 @@ from pyspark.sql.functions import explode_outer, concat, col, \
 #Spark session creation
 spark = SparkSession.builder \
     .master("local") \
-    .config("spark.jars", '/Users/harish/Downloads/spark-3.4.1-bin-hadoop3/jars/hadoop-azure-3.3.6.jar') \
     .getOrCreate()
 
 #Reading source1
 
-file= read_data("csv",'/Users/harish/PycharmProjects/Data_validation_tool/Source_Files/Contact_info.csv',spark)
-file2 = read_data("csv",'/Users/harish/PycharmProjects/Data_validation_tool/Source_Files/Contact_info.csv',spark)
+file= spark.read.option("header", True).csv('/Users/harish/PycharmProjects/Data_validation_tool/Source_Files/Contact_info.csv')
+#file2 = read_data("csv",'/Users/harish/PycharmProjects/Data_validation_tool/Source_Files/Contact_info.csv',spark)
 
 
 
 
-file2.write.mode("overwrite") \
-    .format("jdbc") \
-    .option("url", "jdbc:postgresql://localhost:5432/postgres") \
-    .option("dbtable", "contact_info_raw") \
-    .option("user", "postgres") \
-    .option("password", "Dharmavaram1@") \
-    .option("driver", 'org.postgresql.Driver') \
-    .save()
+# file.write.mode("overwrite") \
+#     .format("jdbc") \
+#     .option("url", "jdbc:postgresql://localhost:5432/postgres") \
+#     .option("dbtable", "contact_info_raw") \
+#     .option("user", "postgres") \
+#     .option("password", "Dharmavaram1@") \
+#     .option("driver", 'org.postgresql.Driver') \
+#     .save()
 
 
-file3 = file.union(file2)
+#file3 = file.union(file2)
 
-print(file3.count())
 file.write.mode("overwrite") \
     .format("jdbc") \
     .option("url", "jdbc:oracle:thin:@//localhost:1521/freepdb1") \
@@ -63,7 +59,7 @@ contact_info_bronze = spark.sql(
     primary_street_name,
     city,
     state,
-    zipcode,
+    cast(zipcode as decimal(10)) zipcode,
     Primary_street_number_prev,
     primary_street_name_prev,
     city_prev,
@@ -105,8 +101,8 @@ contact_info_silver= spark.sql(
         Phone,
         birthmonth,
         'Y' as Current_ind
-        from contact_info_bronze 
-        union 
+        from contact_info_bronze
+        union
         select
         Identifier,
         Surname,

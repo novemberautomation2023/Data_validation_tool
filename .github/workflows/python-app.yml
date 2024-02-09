@@ -3,28 +3,28 @@
 
 name: Python application
 
-#on:
-#  push:
-#    branches: [ "branch2" ]
-#  pull_request:
-#    branches: [ "branch2" ]
-
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        type: choice
-        options:
-          - dev
-          - qa
-          - prod
-        description: Deployment environment
-      space:
-        type: choice
-        options:
-          - synthetic
-          - actual
-        description: Deployment space
+  push:
+    branches: [ "branch2" ]
+  pull_request:
+    branches: [ "branch2" ]
+
+#on:
+#  workflow_dispatch:
+#    inputs:
+#      environment:
+#        type: choice
+#        options:
+#          - dev
+#          - qa
+#          - prod
+#        description: Deployment environment
+#      space:
+#        type: choice
+#        options:
+#          - synthetic
+#          - actual
+#        description: Deployment space
 
 permissions:
   contents: read
